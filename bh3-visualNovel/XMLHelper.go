@@ -125,7 +125,7 @@ func (x *XMLHelper) getAchievementFromXML(data []byte, chapter string) map[strin
 			index++
 		} else {
 			// 将最后一个 end 成就挪到第一个位置上
-			if len(ret) > 1 {
+			if len(ret) > 0 {
 				endA := ret[lastID]
 				delete(ret, lastID)
 				endID := string([]rune(lastID)[:4]) + "0"
@@ -199,10 +199,6 @@ func (x *XMLHelper) getNovelVersion() string {
 
 func (x *XMLHelper) generateAchievementLib() VnAchievements {
 	version := x.getNovelVersion()
-	//if achievements.version == version {
-	//	// no need to update
-	//	return achievements
-	//}
 
 	chapterNum := x.GetTotalChapterNum()
 	all := VnAchievements{

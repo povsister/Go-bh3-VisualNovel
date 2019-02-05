@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	addr = flag.String("addr", "127.0.0.1:80", "http server listen address:port")
+	addr      = flag.String("addr", "127.0.0.1:1551", "http server listen address:port")
 	workerNum = flag.Int("worker", 1, "set the worker number")
-	wPool *WorkerPool
+	wPool     *WorkerPool
 )
 
 func main() {
@@ -34,7 +34,6 @@ func ioWriteString(w http.ResponseWriter, s string) {
 		log.Println("Response Writer error:", err, ". Wrote:", n)
 	}
 }
-
 
 func startHTTP() {
 	// 默认路由
@@ -93,5 +92,3 @@ func vn_taskState(w http.ResponseWriter, req *http.Request) {
 	s := wPool.taskStatus.getStateJSON(t)
 	ioWriteString(w, s)
 }
-
-
