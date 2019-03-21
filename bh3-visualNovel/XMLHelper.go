@@ -113,6 +113,17 @@ func (x *XMLHelper) getAchievementFromXML(data []byte, chapter string) map[strin
 	for {
 		ach := x.parseXMLForAchievement(decoder, keyNeeded, &scene, &action)
 		if ach != "" {
+			// 检查是否存在重复的 ach
+			flag := false
+			for _, v := range ret {
+				if ach == v.code {
+					flag = true
+					break
+				}
+			}
+			if flag {
+				continue
+			}
 			lastID = x.formatAchievementID(chapter, strconv.Itoa(index))
 			t := achievementCode{
 				id:      lastID,

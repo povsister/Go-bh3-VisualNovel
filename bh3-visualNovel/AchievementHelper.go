@@ -102,15 +102,14 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 	ret := ah.readAchievementSubmittedJSON(respBody)
 
 	/*
-	Retcode: 1     成功 插入记录
-	Retcode: 0     记录已存在
-	Retcode: -0.6  操作过于频繁
-	 */
+		Retcode: 1     成功 插入记录
+		Retcode: 0     记录已存在
+		Retcode: -0.6  操作过于频繁
+	*/
 	if ret.Retcode == -0.6 {
 		return ah.SubmitAchievement(achieveCode, timeSleepInSec*2)
 	}
 
-	log.Println(ret)
 	msg := fmt.Sprintf("已提交第%s章-场景%s(对话%s)处的成就记录. code:%s", achieveCode.chapter, achieveCode.scene, achieveCode.action, achieveCode.code)
 	log.Println(msg)
 
@@ -154,11 +153,11 @@ func (ah *AchievementHelper) readAchievementJSON(data []byte) Achievement {
 
 	body := bytes.TrimPrefix(data, []byte("\xef\xbb\xbf"))
 	e := json.Unmarshal(body, &ret)
-	if (e != nil) {
+	if e != nil {
 		log.Println("Read achievement JSON error:", e)
 	}
 
-	log.Printf("%+v", ret)
+	//log.Printf("%+v", ret)
 
 	return ret
 }
@@ -168,7 +167,7 @@ func (ah *AchievementHelper) readAchievementSubmittedJSON(data []byte) Achieveme
 
 	body := bytes.TrimPrefix(data, []byte("\xef\xbb\xbf"))
 	e := json.Unmarshal(body, &ret)
-	if (e != nil) {
+	if e != nil {
 		log.Println("Read achievement JSON submitted error:", e)
 	}
 

@@ -66,7 +66,7 @@ func (t AntiEntropyGF) valid(libAchieve *vn.LIBAchievement) (string, []string, i
 	success := false
 	if retcode == 1 {
 		if len(achievedIDs) >= len(libAchieve.GetNovelAchievements(t.vNo).Achieves) {
-			msg = "成就已经全部达成，无需处理"
+			msg = "成就已经全部达成"
 			code = 0
 		} else {
 			msg = "成功加入处理队列"
@@ -80,16 +80,14 @@ func (t AntiEntropyGF) valid(libAchieve *vn.LIBAchievement) (string, []string, i
 		code = -1
 	}
 	respJSON := RespJSON{
-		Retcode: code,
-		Msg: msg,
+		Retcode:  code,
+		Msg:      msg,
 		Progress: achievedNum,
-		Percent: percent,
+		Percent:  percent,
 	}
-
 
 	return respJSON.toString(), achievedIDs, achievedNum, success
 }
-
 
 func NewAntiEntropyGF(id string, req *http.Request) AntiEntropyGF {
 	t := AntiEntropyGF{

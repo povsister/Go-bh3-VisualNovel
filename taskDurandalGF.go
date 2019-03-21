@@ -66,7 +66,7 @@ func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int,
 	success := false
 	if retcode == 1 {
 		if len(achievedIDs) >= len(libAchieve.GetNovelAchievements(t.vNo).Achieves) {
-			msg = "成就已经全部达成"
+			msg = "当前成就已经全部达成"
 			code = 0
 		} else {
 			msg = "成功加入处理队列"
@@ -80,10 +80,10 @@ func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int,
 		code = -1
 	}
 	respJSON := RespJSON{
-		Retcode: code,
-		Msg: msg,
+		Retcode:  code,
+		Msg:      msg,
 		Progress: achievedNum,
-		Percent: percent,
+		Percent:  percent,
 	}
 
 	return respJSON.toString(), achievedIDs, achievedNum, success
