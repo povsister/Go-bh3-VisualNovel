@@ -63,10 +63,10 @@ func indexPage(w http.ResponseWriter, req *http.Request) {
 func gf_antiEntropy(w http.ResponseWriter, req *http.Request) {
 	t := NewAntiEntropyGF(vn.GetTaskIdFromPath(req), req)
 	// 验证任务有效性
-	msg, achievedIDs, progress, ok := t.valid(wPool.libAchievement)
+	msg, achievedIDs, progress, total, ok := t.valid(wPool.libAchievement)
 	if ok {
 		// 创建一个任务状态
-		wPool.taskStatus.newTaskState(t.getTaskID(), progress)
+		wPool.taskStatus.newTaskState(t.getTaskID(), progress, total)
 		// 将已经完成的成就列表保存起来
 		wPool.taskStatus.setAchievedIDs(t.getTaskID(), achievedIDs)
 		// 加入到处理队列中
@@ -78,9 +78,9 @@ func gf_antiEntropy(w http.ResponseWriter, req *http.Request) {
 func gf_Durandal(w http.ResponseWriter, req *http.Request) {
 	t := NewDurandalGF(vn.GetTaskIdFromPath(req), req)
 
-	msg, achievedIDs, progress, ok := t.valid(wPool.libAchievement)
+	msg, achievedIDs, progress, total, ok := t.valid(wPool.libAchievement)
 	if ok {
-		wPool.taskStatus.newTaskState(t.getTaskID(), progress)
+		wPool.taskStatus.newTaskState(t.getTaskID(), progress, total)
 		wPool.taskStatus.setAchievedIDs(t.getTaskID(), achievedIDs)
 		wPool.taskQueue.put(t)
 	}

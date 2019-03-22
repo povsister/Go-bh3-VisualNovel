@@ -57,15 +57,16 @@ func (t DurandalGF) getTaskID() string {
 	return t.id
 }
 
-func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int, bool) {
+func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int, int, bool) {
 	// 检查成就库的更新
 	libAchieve.SetNovelAchievements(t.vNo, t.xmlHelper.UpdateAchievementLib(libAchieve.GetNovelAchievements(t.vNo)))
 	achievedIDs, achievedNum, percent, retcode := t.achieveHelper.GetUserProgress()
+	totalAchieves := len(libAchieve.GetNovelAchievements(t.vNo).Achieves)
 	var msg string
 	code := 1
 	success := false
 	if retcode == 1 {
-		if len(achievedIDs) >= len(libAchieve.GetNovelAchievements(t.vNo).Achieves) {
+		if len(achievedIDs) >= totalAchieves {
 			msg = "当前成就已经全部达成"
 			code = 0
 		} else {
@@ -84,9 +85,10 @@ func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int,
 		Msg:      msg,
 		Progress: achievedNum,
 		Percent:  percent,
+		Total:    totalAchieves,
 	}
 
-	return respJSON.toString(), achievedIDs, achievedNum, success
+	return respJSON.toString(), achievedIDs, achievedNum, totalAchieves, success
 }
 
 func NewDurandalGF(id string, req *http.Request) DurandalGF {

@@ -10,6 +10,7 @@ type RespJSON struct {
 	Msg      string
 	Progress int
 	Percent  float64
+	Total    int
 }
 
 type StateRespJSON struct {
@@ -19,6 +20,8 @@ type StateRespJSON struct {
 	StartedTime int64
 	Finished    bool
 	EndedTime   int64
+	Process     int
+	Total       int
 	Log         string
 }
 
