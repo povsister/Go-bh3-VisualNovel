@@ -20,7 +20,7 @@ type StateRespJSON struct {
 	StartedTime int64
 	Finished    bool
 	EndedTime   int64
-	Process     int
+	Progress    int
 	Total       int
 	Log         string
 }

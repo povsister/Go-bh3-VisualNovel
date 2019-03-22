@@ -87,7 +87,7 @@ func (s *TaskStatus) getStateJSON(taskId string) string {
 		StartedTime: thisTask.startTime.Unix(),
 		Finished:    thisTask.finished,
 		EndedTime:   thisTask.endTime.Unix(),
-		Process:     thisTask.progress,
+		Progress:    thisTask.progress,
 		Total:       thisTask.total,
 		Log:         thisTask.log,
 	}
