@@ -27,7 +27,7 @@ func (l *LIBAchievement) SetNovelAchievements(vNo int, vnA VnAchievements) {
 	l.Lib[vNo] = vnA
 }
 
-func (l *LIBAchievement) GetNovelAchievements(vNo int) VnAchievements {
+func (l LIBAchievement) GetNovelAchievements(vNo int) VnAchievements {
 	return l.Lib[vNo]
 }
 
