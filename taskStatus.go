@@ -75,7 +75,7 @@ func (s *TaskStatus) getStateJSON(taskId string) string {
 		}
 		sF = StateNotFond{
 			Retcode: -1,
-			Log:     "任务不存在",
+			Log:     "任务记录不存在",
 		}
 		goto Response
 	}

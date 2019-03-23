@@ -67,18 +67,18 @@ func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int,
 	success := false
 	if retcode == 1 {
 		if len(achievedIDs) >= totalAchieves {
-			msg = "当前成就已经全部达成"
+			msg = "成就已经全部达成"
 			code = 0
 		} else {
 			msg = "成功加入处理队列"
 			success = true
 		}
-	} else if retcode == -0.6 {
-		msg = "请稍后重试"
-		code = -2
-	} else {
-		msg = "无效链接"
+	} else if retcode == -1 {
+		msg = "你的帐号已被米忽悠限制，请半小时后重试"
 		code = -1
+	} else {
+		msg = "未检测到游戏id，请从游戏内重新获取URL"
+		code = -2
 	}
 	respJSON := RespJSON{
 		Retcode:  code,
