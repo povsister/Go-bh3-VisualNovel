@@ -33,7 +33,18 @@ func (w *Worker) start() {
 
 func (w *Worker) handleTask(t Task) {
 	// 任务处理逻辑
-	t.process(w)
-	// 更新任务状态
-	w.pool.taskStatus.updateTaskState(t.getTaskID(), "end")
+	succeed, frequent := t.process(w)
+	if succeed {
+		// 更新任务状态
+		w.pool.taskStatus.updateTaskState(t.getTaskID(), "end")
+	} else {
+		if frequent {
+			// 重新加入队列中
+			w.pool.taskStatus.updateTaskState(t.getTaskID(), "failedFrequent")
+			w.pool.taskQueue.put(t)
+		} else {
+			w.pool.taskStatus.updateTaskState(t.getTaskID(), "failed")
+		}
+	}
+
 }

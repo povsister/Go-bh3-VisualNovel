@@ -64,16 +64,17 @@ func (ah *AchievementHelper) GetUserProgress() ([]string, int, float64, float64)
 	return achievedIDs, achievedNum, progress, ret.Retcode
 }
 
-func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, secondsWait int) string {
+func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, secondsWait int) (string, bool, bool) {
 	// 每次都变换随机数种子
 	rand.Seed(time.Now().UnixNano())
 	/* 判断是否是递归操作
 	   0  : 否
 	   !0 : 是
 	*/
+	// 每次随机等待时间 5 - 20秒
 	var timeSleepInSec int
 	if secondsWait == 0 {
-		timeSleepInSec = rand.Intn(5) + 3
+		timeSleepInSec = rand.Intn(15) + 5
 	} else {
 		timeSleepInSec = secondsWait
 	}
@@ -101,19 +102,31 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 
 	ret := ah.readAchievementSubmittedJSON(respBody)
 
+	msg := fmt.Sprintf("已提交第%s章-场景%s(对话%s)处的成就记录. Msg:%s", achieveCode.chapter, achieveCode.scene, achieveCode.action, ret.Msg)
+
+	log.Println(msg)
+
 	/*
 		Retcode: 1     成功 插入记录
 		Retcode: 0     记录已存在
-		Retcode: -0.6  操作过于频繁
+		Retcode: -1    Your operation is too frequent. Retcode:-1
+		Retcode: -1    Illegal Operation. Retcode:-1
 	*/
-	if ret.Retcode == -0.6 {
-		return ah.SubmitAchievement(achieveCode, timeSleepInSec*2)
+	if ret.Retcode < 0 {
+		if ret.Retcode == -1 {
+			// too frequent
+			if strings.Index(ret.Msg, "frequent") != -1 {
+				// Msg, failed?, frequent?
+				return msg, true, true
+			} else {
+				return msg, true, false
+			}
+			// return ah.SubmitAchievement(achieveCode, timeSleepInSec*2)
+		}
+		return msg, true, false
 	}
 
-	msg := fmt.Sprintf("已提交第%s章-场景%s(对话%s)处的成就记录. code:%s", achieveCode.chapter, achieveCode.scene, achieveCode.action, achieveCode.code)
-	log.Println(msg)
-
-	return msg
+	return msg, false, false
 }
 
 func (ah *AchievementHelper) addAchievementCookies(achieveCode achievementCode, req *http.Request) *http.Request {

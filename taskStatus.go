@@ -16,6 +16,7 @@ type taskState struct {
 	startTime  time.Time
 	finished   bool
 	endTime    time.Time
+	error      bool
 	log        string
 	// 代表提交该任务时玩家的成就完成个数
 	progress int
@@ -31,6 +32,7 @@ func (s *TaskStatus) newTaskState(taskId string, progress int, total int) {
 		startTime:   time.Now(),
 		finished:    false,
 		endTime:     time.Now(),
+		error:       false,
 		log:         "任务正在排队等候处理",
 		progress:    progress,
 		total:       total,
@@ -58,9 +60,20 @@ func (s *TaskStatus) updateTaskState(taskId string, info string) {
 		thisTask.finished = true
 		thisTask.processing = false
 		break
+	case "failedFrequent":
+		thisTask.processing = false
+		break
+	case "failed":
+		thisTask.processing = false
+		thisTask.endTime = time.Now()
+		thisTask.finished = true
+		thisTask.error = true
+		break
+	case "progress++":
+		thisTask.progress++
+		break
 	default:
 		thisTask.log = info
-		thisTask.progress++
 	}
 	s.task[taskId] = thisTask
 }
@@ -87,6 +100,7 @@ func (s *TaskStatus) getStateJSON(taskId string) string {
 		StartedTime: thisTask.startTime.Unix(),
 		Finished:    thisTask.finished,
 		EndedTime:   thisTask.endTime.Unix(),
+		Error:       thisTask.error,
 		Progress:    thisTask.progress,
 		Total:       thisTask.total,
 		Log:         thisTask.log,

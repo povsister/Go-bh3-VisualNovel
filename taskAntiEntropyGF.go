@@ -35,7 +35,7 @@ type AntiEntropyGF struct {
 	achieveHelper *vn.AchievementHelper
 }
 
-func (t AntiEntropyGF) process(worker *Worker) {
+func (t AntiEntropyGF) process(worker *Worker) (bool, bool) {
 	vnA := worker.pool.libAchievement.GetNovelAchievements(t.vNo)
 
 	// 玩家已完成成就
@@ -47,10 +47,20 @@ func (t AntiEntropyGF) process(worker *Worker) {
 		delete(allAchieve, v)
 	}
 	// 提交
-	for _, v := range allAchieve {
-		thisLog := t.achieveHelper.SubmitAchievement(v, 0)
+	for k, v := range allAchieve {
+		thisLog, failed, frequent := t.achieveHelper.SubmitAchievement(v, 0)
+		// 先更新log
 		worker.pool.taskStatus.updateTaskState(t.getTaskID(), thisLog)
+		if failed {
+			// success?, frequent?
+			return !failed, frequent
+		} else {
+			// 提交成功则更新已完成的任务ID
+			worker.pool.taskStatus.updateTaskState(t.getTaskID(), "progress++")
+			worker.pool.taskStatus.setAchievedIDs(t.getTaskID(), append(achieved, k))
+		}
 	}
+	return true, false
 }
 
 func (t AntiEntropyGF) getTaskID() string {
