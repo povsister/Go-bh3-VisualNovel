@@ -42,22 +42,22 @@ func (t DurandalGF) process(worker *Worker) (bool, bool) {
 	achieved := worker.pool.taskStatus.task[t.getTaskID()].achievedIDs
 	// 全部成就
 	allAchieve := vnA.Achieves
-	// 去除已达成的成就
-	for _, v := range achieved {
-		delete(allAchieve, v)
-	}
-	// 提交
+	// 找出未达成的成就
 	for k, v := range allAchieve {
-		thisLog, failed, frequent := t.achieveHelper.SubmitAchievement(v, 0)
-		// 先更新log
-		worker.pool.taskStatus.updateTaskState(t.getTaskID(), thisLog)
-		if failed {
-			// success?, frequent?
-			return !failed, frequent
-		} else {
-			// 提交成功则更新已完成的任务ID
-			worker.pool.taskStatus.updateTaskState(t.getTaskID(), "progress++")
-			worker.pool.taskStatus.setAchievedIDs(t.getTaskID(), append(achieved, k))
+		if _, ok := achieved[k]; !ok {
+			// 提交未达成的成就
+			thisLog, failed, frequent := t.achieveHelper.SubmitAchievement(v, 0)
+			// 先更新log
+			worker.pool.taskStatus.updateTaskState(t.getTaskID(), thisLog)
+			if failed {
+				// success?, frequent?
+				return !failed, frequent
+			} else {
+				// 提交成功则更新已完成的任务ID
+				worker.pool.taskStatus.updateTaskState(t.getTaskID(), "progress++")
+				achieved[k] = 1
+				worker.pool.taskStatus.setAchievedIDs(t.getTaskID(), achieved)
+			}
 		}
 	}
 	return true, false
@@ -67,7 +67,7 @@ func (t DurandalGF) getTaskID() string {
 	return t.id
 }
 
-func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, []string, int, int, bool) {
+func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, map[string]int, int, int, bool) {
 	// 检查成就库的更新
 	libAchieve.SetNovelAchievements(t.vNo, t.xmlHelper.UpdateAchievementLib(libAchieve.GetNovelAchievements(t.vNo)))
 	achievedIDs, achievedNum, percent, retcode := t.achieveHelper.GetUserProgress()

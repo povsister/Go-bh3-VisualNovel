@@ -22,7 +22,7 @@ type taskState struct {
 	progress int
 	// 总成就个数
 	total       int
-	achievedIDs []string
+	achievedIDs map[string]int
 }
 
 func (s *TaskStatus) newTaskState(taskId string, progress int, total int) {
@@ -36,11 +36,11 @@ func (s *TaskStatus) newTaskState(taskId string, progress int, total int) {
 		log:         "任务正在排队等候处理",
 		progress:    progress,
 		total:       total,
-		achievedIDs: make([]string, progress),
+		achievedIDs: make(map[string]int, progress),
 	}
 }
 
-func (s *TaskStatus) setAchievedIDs(taskId string, arr []string) {
+func (s *TaskStatus) setAchievedIDs(taskId string, arr map[string]int) {
 	tS := s.task[taskId]
 	tS.achievedIDs = arr
 	s.task[taskId] = tS

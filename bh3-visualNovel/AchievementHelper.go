@@ -24,7 +24,7 @@ type AchievementHelper struct {
 	HttpClient *MyAJAX
 }
 
-func (ah *AchievementHelper) GetUserProgress() ([]string, int, float64, float64) {
+func (ah *AchievementHelper) GetUserProgress() (map[string]int, int, float64, float64) {
 	req := buildRequest("POST", getFullURL(ah.URL_ACHIEVEMENT, ah.QUERY_STRING), ah.getAchievementPostBody())
 	addRefererHeader(ah.URL_BASE, ah.QUERY_STRING, req)
 
@@ -32,7 +32,7 @@ func (ah *AchievementHelper) GetUserProgress() ([]string, int, float64, float64)
 
 	ret := ah.readAchievementJSON(respBody)
 
-	var achievedIDs []string
+	achievedIDs := make(map[string]int)
 
 	if ret.Retcode != 1 {
 		return achievedIDs, 0, 0, ret.Retcode
@@ -58,7 +58,7 @@ func (ah *AchievementHelper) GetUserProgress() ([]string, int, float64, float64)
 		achievedNum = len(achieved)
 		// 获取已经完成的成就 ID
 		for _, v := range achieved {
-			achievedIDs = append(achievedIDs, v["achievement"])
+			achievedIDs[v["achievement"]] = 1
 		}
 	}
 	return achievedIDs, achievedNum, progress, ret.Retcode
@@ -71,10 +71,10 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 	   0  : 否
 	   !0 : 是
 	*/
-	// 每次随机等待时间 5 - 20秒
+	// 每次随机等待时间 10 - 20秒
 	var timeSleepInSec int
 	if secondsWait == 0 {
-		timeSleepInSec = rand.Intn(15) + 5
+		timeSleepInSec = rand.Intn(10) + 10
 	} else {
 		timeSleepInSec = secondsWait
 	}
