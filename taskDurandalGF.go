@@ -86,7 +86,7 @@ func (t DurandalGF) valid(libAchieve *vn.LIBAchievement) (string, map[string]int
 			msg = "成功加入处理队列"
 			success = true
 		}
-	} else if retcode == -1 {
+	} else if retcode == -1 || retcode == -0.6 {
 		msg = "你的帐号已被米忽悠限制，请半小时后重试"
 		code = -1
 	} else {

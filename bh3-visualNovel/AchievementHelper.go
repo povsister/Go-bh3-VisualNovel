@@ -109,11 +109,12 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 	/*
 		Retcode: 1     成功 插入记录
 		Retcode: 0     记录已存在
+		Retcode: -0.6  Your operation is too frequent. Retcode:-0.6
 		Retcode: -1    Your operation is too frequent. Retcode:-1
 		Retcode: -1    Illegal Operation. Retcode:-1
 	*/
 	if ret.Retcode < 0 {
-		if ret.Retcode == -1 {
+		if ret.Retcode == -1 || ret.Retcode == -0.6 {
 			// too frequent
 			if strings.Index(ret.Msg, "frequent") != -1 {
 				// Msg, failed?, frequent?
