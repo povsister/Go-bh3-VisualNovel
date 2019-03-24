@@ -60,7 +60,7 @@ func (t DurandalGF) process(worker *Worker) (bool, bool) {
 				achieved[k] = 1
 				worker.pool.taskStatus.setAchievedIDs(t.getTaskID(), achieved)
 			}
-			log.Println(fmt.Sprintf("cat:%s id:%s log:%s cpCount:%d worker:%s", t.vNo, t.id, thisLog, len(worker.pool.taskStatus.task[t.getTaskID()].achievedIDs), worker.id))
+			log.Println(fmt.Sprintf("cat:%d cpCount:%d id:%s log:%s worker:%d", t.vNo, len(worker.pool.taskStatus.task[t.getTaskID()].achievedIDs), t.id, thisLog, worker.id))
 		}
 	}
 	return true, false
