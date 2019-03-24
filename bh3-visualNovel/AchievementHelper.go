@@ -104,7 +104,7 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 
 	msg := fmt.Sprintf("已提交第%s章-场景%s(对话%s)处的成就记录. Msg:%s", achieveCode.chapter, achieveCode.scene, achieveCode.action, ret.Msg)
 
-	log.Println(msg)
+	//log.Println(msg)
 
 	/*
 		Retcode: 1     成功 插入记录
@@ -118,9 +118,8 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 			if strings.Index(ret.Msg, "frequent") != -1 {
 				// Msg, failed?, frequent?
 				return msg, true, true
-			} else {
-				return msg, true, false
 			}
+			return msg, true, false
 			// return ah.SubmitAchievement(achieveCode, timeSleepInSec*2)
 		}
 		return msg, true, false

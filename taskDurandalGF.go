@@ -2,6 +2,8 @@ package main
 
 import (
 	"bh3-visualNovel"
+	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -58,6 +60,7 @@ func (t DurandalGF) process(worker *Worker) (bool, bool) {
 				achieved[k] = 1
 				worker.pool.taskStatus.setAchievedIDs(t.getTaskID(), achieved)
 			}
+			log.Println(fmt.Sprintf("cat:%s id:%s log:%s cpCount:%d worker:%s", t.vNo, t.id, thisLog, len(worker.pool.taskStatus.task[t.getTaskID()].achievedIDs), worker.id))
 		}
 	}
 	return true, false
