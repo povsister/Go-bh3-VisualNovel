@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -39,13 +40,23 @@ func (w *Worker) startDelayed() {
 			log.Printf("Delayed worker %d is waiting for task\n", w.id)
 			select {
 			case task := <-w.task:
-				log.Printf("Delayed Worker %d is handling task\n", w.id)
+				// 获取任务开始时间
+				tS := time.Now().Unix()
+				log.Printf("Delayed worker %d is handling task\n", w.id)
 				w.handleTask(*task)
-				// 等待 180 秒, 再进行下次尝试
-				time.Sleep(180 * time.Second)
+				// 获取任务结束时间
+				tE := time.Now().Unix()
+				// 判断是否需要额外等待
+				tI := tE - tS
+				secWait := int64(180)
+				if tI < secWait {
+					tStr := strconv.FormatInt(secWait-tI, 10)
+					tDur, _ := time.ParseDuration(tStr + "s")
+					time.Sleep(tDur)
+				}
 			case quitSignal := <-w.quit:
 				if quitSignal {
-					log.Printf("Delayed Worker %d stopped\n", w.id)
+					log.Printf("Delayed worker %d stopped\n", w.id)
 					return
 				}
 
@@ -62,7 +73,7 @@ func (w *Worker) handleTask(t Task) {
 		w.pool.taskStatus.updateTaskState(t.getTaskID(), "end")
 	} else {
 		if frequent {
-			// 加入到延时队列中  该队列中的worker每180秒工作一次
+			// 加入到延时队列中
 			w.pool.taskStatus.updateTaskState(t.getTaskID(), "failedFrequent")
 			w.pool.delayedTaskQueue.put(t)
 		} else {
