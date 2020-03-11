@@ -16,6 +16,7 @@ import (
 
 type AchievementHelper struct {
 	// constant
+	VNO             int
 	URL_BASE        string
 	URL_ACHIEVEMENT string
 	COOKIE_NAME     map[string]string
@@ -144,6 +145,12 @@ func (ah *AchievementHelper) addAchievementCookies(achieveCode achievementCode, 
 }
 
 func (ah *AchievementHelper) getAchievementPostBody() io.Reader {
+	//var achieveStr string
+	//if ah.VNO == DURANDAL {
+	//	achieveStr = "GET_AWARD_CN"
+	//} else {
+	//	achieveStr = "LOAD"
+	//}
 	t := url.Values{
 		"achievement": {"LOAD"},
 		"chapter":     {"1"},

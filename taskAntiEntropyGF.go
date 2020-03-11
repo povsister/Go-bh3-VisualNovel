@@ -130,6 +130,7 @@ func NewAntiEntropyGF(id string, req *http.Request) AntiEntropyGF {
 		HttpClient:      t.httpClient,
 	}
 	achieveHelper := vn.AchievementHelper{
+		VNO:             t.vNo,
 		URL_BASE:        t.URL_BASE,
 		URL_ACHIEVEMENT: t.URL_ACHIEVEMENT,
 		COOKIE_NAME: map[string]string{

@@ -130,6 +130,7 @@ func NewDurandalGF(id string, req *http.Request) DurandalGF {
 		HttpClient:      t.httpClient,
 	}
 	achieveHelper := vn.AchievementHelper{
+		VNO:             t.vNo,
 		URL_BASE:        t.URL_BASE,
 		URL_ACHIEVEMENT: t.URL_ACHIEVEMENT,
 		COOKIE_NAME: map[string]string{
