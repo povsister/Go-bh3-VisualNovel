@@ -2,8 +2,10 @@ package vn
 
 // map 使用 key 1 和 2 区分 逆熵 和 幽兰戴尔
 const (
-	ANTIENTROPY = 1
-	DURANDAL    = 2
+	_ = iota
+	ANTIENTROPY
+	DURANDAL
+	SEVEN_SWORDS
 )
 
 type LIBAchievement struct {
@@ -21,6 +23,7 @@ type achievementCode struct {
 	scene   string
 	action  string
 	code    string
+	name    string
 }
 
 func (l *LIBAchievement) SetNovelAchievements(vNo int, vnA VnAchievements) {

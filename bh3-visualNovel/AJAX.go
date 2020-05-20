@@ -17,6 +17,7 @@ type MyAJAX struct {
 
 func (a *MyAJAX) simulateAJAX(req *http.Request) []byte {
 
+	//log.Printf("%+v", req)
 	resp, err := a.Client.Do(req)
 	if err != nil {
 		log.Println("AJAX error: ", err)
@@ -36,7 +37,7 @@ func (a *MyAJAX) simulateAJAX(req *http.Request) []byte {
 	}
 
 	respBody, _ := ioutil.ReadAll(decompressed)
-
+	//log.Printf("%+v", string(respBody))
 	return respBody
 }
 
@@ -57,6 +58,23 @@ func buildRequest(method string, url string, body io.Reader) *http.Request {
 		req.Header.Set("Accept", "application/json, text/javascript, */*; q=0.01")
 	} else {
 		req.Header.Set("Accept", "application/xml, text/xml, */*; q=0.01")
+	}
+	return req
+}
+
+func buildRequestV2(method string, url string, body io.Reader) *http.Request {
+	req, _ := http.NewRequest(method, url, body)
+	req.Header.Set("Accept", "application/json, text/javascript, */*; q=0.01")
+	req.Header.Set("Origin", req.URL.Scheme+"://"+req.URL.Host)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
+	req.Header.Set("Sec-Fetch-Site", "same-origin")
+	req.Header.Set("Sec-Fetch-Dest", "empty")
+	req.Header.Set("Sec-Fetch-Mode", "cors")
+
+	if method == "POST" {
+		req.Header.Set("Content-Type", "application/json;charset=UTF-8")
 	}
 	return req
 }

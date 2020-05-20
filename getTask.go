@@ -44,6 +44,7 @@ func startHTTP() {
 	// VN ROUTE
 	http.HandleFunc("/vn/gf/antiEntropy/", gf_antiEntropy)
 	http.HandleFunc("/vn/gf/Durandal/", gf_Durandal)
+	http.HandleFunc("/vn/gf/7-Sword/", gf_SevenSword)
 	// start
 	log.Printf("Starting Web server on %s", *addr)
 	err := http.ListenAndServe(*addr, nil)
@@ -78,6 +79,17 @@ func gf_antiEntropy(w http.ResponseWriter, req *http.Request) {
 func gf_Durandal(w http.ResponseWriter, req *http.Request) {
 	t := NewDurandalGF(vn.GetTaskIdFromPath(req), req)
 
+	msg, achievedIDs, progress, total, ok := t.valid(wPool.libAchievement)
+	if ok {
+		wPool.taskStatus.newTaskState(t.getTaskID(), progress, total)
+		wPool.taskStatus.setAchievedIDs(t.getTaskID(), achievedIDs)
+		wPool.taskQueue.put(t)
+	}
+	ioWriteString(w, msg)
+}
+
+func gf_SevenSword(w http.ResponseWriter, req *http.Request) {
+	t := NewSevenSwordGF(vn.GetTaskIdFromPath(req), req)
 	msg, achievedIDs, progress, total, ok := t.valid(wPool.libAchievement)
 	if ok {
 		wPool.taskStatus.newTaskState(t.getTaskID(), progress, total)
