@@ -153,7 +153,9 @@ func (ah *AchievementHelper) SubmitAchievement(achieveCode achievementCode, seco
 		}
 		return msg, true, false
 	}
-
+	if ret.Retcode == 0 && ret.Msg == "" {
+		return "Request failed. Re-try ...", true, true
+	}
 	return msg, false, false
 }
 
@@ -203,6 +205,9 @@ func (ah *AchievementHelper) SubmitAchievementV2(achieveCode achievementCode, se
 			}
 		}
 		return msg, true, false
+	}
+	if ret.RetCode == 0 && ret.Msg == "" {
+		return "Request failed. Re-try ...", true, true
 	}
 	return msg, false, false
 }
