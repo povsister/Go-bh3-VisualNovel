@@ -1,10 +1,11 @@
 # Go-bh3-VisualNovel
-> WARNING: Shitty code inside. Read at your own risk.
+> **WARNING: Shitty code inside. Read at your own risk.**
 
 Daemon server with HTTP interface designed to detect and achieve collections of Honkai3 visual novel.
 
 ## Requirements
-- Golang SDK >= 1.13.10
+- Golang >= 1.13.10
+- Use `GOPATH` instead of `GOMOD` (which is default for Go 1.14+)
 
 ## It CAN
 - Get task with auth param from HTTP interface
@@ -17,11 +18,11 @@ Daemon server with HTTP interface designed to detect and achieve collections of 
  
 
 ## TODO
-- use panic/recover to deal with AJAX Exception
-- ability to stop task or worker
-- ability to monitor worker health
-- ability to assign specific type of task to specific set of workers
-- more elegant way of task state update
+- ~~use panic/recover to deal with AJAX Exception~~
+- ~~ability to stop task or worker~~
+- ~~ability to monitor worker health~~
+- ~~ability to assign specific type of task to specific set of workers~~
+- ~~more elegant way of task state update~~
 
 ## Licence
 [GPLv3 Licence](https://en.wikipedia.org/wiki/GNU_General_Public_License#Version_3)
