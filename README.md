@@ -1,8 +1,10 @@
 # Go-bh3-VisualNovel
+> WARNING: Shitty code inside. Read at your own risk.
+
 Daemon server with HTTP interface designed to detect and achieve collections of Honkai3 visual novel.
 
 ## Requirements
-- Golang SDK 1.11.4
+- Golang SDK >= 1.13.10
 
 ## It CAN
 - Get task with auth param from HTTP interface
